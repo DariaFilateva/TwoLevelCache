@@ -1,14 +1,14 @@
-package cache.memory;
+package cache.filesystem;
 
 import cache.AbstractCache;
 
-public class MemoryCache extends AbstractCache {
+public class FileSystemCache extends AbstractCache{
 
-    private static final String LEVEL = "firstLevelSize";
+    private static final String LEVEL = "secondLevelSize";
 
     private int size;
 
-    public MemoryCache() throws Exception {
+    public FileSystemCache() throws Exception {
         super();
         this.size = Integer.valueOf(getSize(LEVEL));
 
@@ -33,6 +33,4 @@ public class MemoryCache extends AbstractCache {
     public void clearCache() {
 
     }
-
-
 }

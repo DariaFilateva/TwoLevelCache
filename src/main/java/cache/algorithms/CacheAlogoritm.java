@@ -1,4 +1,4 @@
 package cache.algorithms;
 
-public class CacheAlogoritm {
+public abstract class CacheAlogoritm {
 }
