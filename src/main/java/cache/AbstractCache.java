@@ -2,11 +2,13 @@ package cache;
 
 import cache.algorithms.CacheAlogoritm;
 import cache.algorithms.LRU;
+import cache.algorithms.MFU;
 import cache.memory.MemoryCache;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -14,21 +16,36 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
 
     public static final String STRATEGY = "strategy";
 
-    private static Logger logger = Logger.getLogger(MemoryCache.class.getName());
-
+    private static final Logger logger = Logger.getLogger(MemoryCache.class.getName());
     private CacheAlogoritm cacheAlogoritm;
+
+    protected HashMap<K, V> cache;
+    protected int size;
 
     public AbstractCache() throws Exception {
         this.cacheAlogoritm = findStrategy();
     }
 
-    public abstract void putToCache(K key, V object);
+    public void putToCache(K key, V object) {
+        if (cache.size() != size) {
+            putToSpecificCache(key, object);
+        } else {
+            removeObject((K) cacheAlogoritm.getKeyToRemove());
+            putToCache(key, object);
+        }
+    }
 
-    public abstract Object getFromCache(K key);
+    public V getFromCache(K key) {
+        return cache.get(key);
+    }
 
-    public abstract void removeObject(K key);
+    public void removeObject(K key) {
+        cache.remove(key);
+    }
 
-    public abstract void clearCache();
+    public void clearCache() {
+        cache.clear();
+    }
 
     protected Properties getProperties() throws IOException {
         Properties prop = new Properties();
@@ -37,7 +54,7 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
             prop.load(inputStream);
             logger.info("Config file was reading succesfuly");
         } else {
-            throw new FileNotFoundException("property file '" + propertyPath + "' not found in the classpath");
+            throw new FileNotFoundException("Property file: '" + propertyPath + "' not found in the classpath");
         }
         return prop;
     }
@@ -46,14 +63,16 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
         return getProperties().getProperty(level);
     }
 
+    protected abstract void putToSpecificCache(K key, V object);
+
     private CacheAlogoritm findStrategy() throws Exception {
         logger.info("Find strategy...");
         switch (getProperties().getProperty(STRATEGY)) {
             case "LRU":
                 return new LRU();
-          /*  case "MRU":
-                return new CacheAlogoritm();
-            case "LFU":
+            case "MFU":
+                return new MFU();
+         /*   case "LFU":
                 return new CacheAlogoritm();
             case "FIFO":
                 return new CacheAlogoritm();*/

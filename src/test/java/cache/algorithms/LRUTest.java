@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 import java.util.Date;
 
 
-public class LFUTest {
+public class LRUTest {
 
     private LRU<String> lru;
 

@@ -2,37 +2,22 @@ package cache.memory;
 
 import cache.AbstractCache;
 
+import java.util.HashMap;
+
 public class MemoryCache<K, V> extends AbstractCache<K, V> {
 
     private static final String LEVEL = "firstLevelSize";
 
-    private int size;
-
     public MemoryCache() throws Exception {
         super();
         this.size = Integer.valueOf(getSize(LEVEL));
-
+        cache = new HashMap<>(size);
     }
 
     @Override
-    public void putToCache(K key, V object) {
-
+    protected void putToSpecificCache(K key, V object) {
+        cache.put(key, object);
     }
-
-    @Override
-    public Object getFromCache(K key) {
-        return null;
-    }
-
-    @Override
-    public void removeObject(K key) {
-
-    }
-
-    @Override
-    public void clearCache() {
-
-    }
-
 
 }
+
