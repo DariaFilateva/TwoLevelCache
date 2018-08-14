@@ -6,26 +6,23 @@ import org.testng.annotations.Test;
 
 import java.util.Date;
 
-
-public class LFUTest {
-
-    private LRU<String> lru;
+public class MFUTest {
+    private MFU<String> mfu;
 
     @BeforeClass
     public void init() {
-        lru = new LRU<>();
-        lru.setKeyData("key1", new Date());
-        lru.setKeyData("key2", new Date(1234));
+        mfu = new MFU<>();
+        mfu.setKeyData("key1", new Date());
+        mfu.setKeyData("key2", new Date(1234));
     }
-
 
     @Test
     public void testGetKeyDataToRemove() throws Exception {
-        Assert.assertEquals(lru.getKeyDataToRemove(), lru.getKeyData("key2"));
+        Assert.assertEquals(mfu.getKeyDataToRemove(), mfu.getKeyData("key1"));
     }
 
     @Test
     public void testGetDefaultKeyData() throws Exception {
-        Assert.assertNotNull(lru.getDefaultKeyData());
+        Assert.assertNotNull(mfu.getDefaultKeyData());
     }
 }

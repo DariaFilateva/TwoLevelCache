@@ -4,14 +4,14 @@ import java.util.Collections;
 import java.util.Date;
 
 /**
- * Класс стратегии кеширования "Вытеснение давно неиспользуемых".
+ * Класс стратегии кеширования "Наиболее недавно использовавшийся".
  * @autor DariaFilateva
  */
-public class LRU <K> extends CacheAlogoritm <K, Date> {
+public class MFU <K> extends CacheAlogoritm <K, Date> {
 
     @Override
     protected Date getKeyDataToRemove() {
-        return Collections.min(this.useInfoMap.values());
+        return Collections.max(this.useInfoMap.values());
     }
 
     @Override
