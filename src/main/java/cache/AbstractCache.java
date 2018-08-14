@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public abstract class AbstractCache implements IChache {
+public abstract class AbstractCache<K, V> implements IChache<K, V> {
 
     public static final String STRATEGY = "strategy";
 
@@ -22,11 +22,11 @@ public abstract class AbstractCache implements IChache {
         this.cacheAlogoritm = findStrategy();
     }
 
-    public abstract void putToCache(Object key, Object object);
+    public abstract void putToCache(K key, V object);
 
-    public abstract Object getFromCache(Object key);
+    public abstract Object getFromCache(K key);
 
-    public abstract void removeObject(Object key);
+    public abstract void removeObject(K key);
 
     public abstract void clearCache();
 

@@ -2,9 +2,12 @@ package cache.filesystem;
 
 import cache.AbstractCache;
 
-public class FileSystemCache extends AbstractCache{
+import java.io.Serializable;
+
+public class FileSystemCache<K extends Serializable, V extends Serializable> extends AbstractCache<K, V>{
 
     private static final String LEVEL = "secondLevelSize";
+    private final String CACHE_DIR_PATH="";
 
     private int size;
 
@@ -15,17 +18,17 @@ public class FileSystemCache extends AbstractCache{
     }
 
     @Override
-    public void putToCache(Object key, Object object) {
+    public void putToCache(K key, V object) {
 
     }
 
     @Override
-    public Object getFromCache(Object key) {
+    public Object getFromCache(K key) {
         return null;
     }
 
     @Override
-    public void removeObject(Object key) {
+    public void removeObject(K key) {
 
     }
 

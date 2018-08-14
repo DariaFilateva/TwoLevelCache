@@ -1,14 +1,14 @@
 package cache;
 
-public interface IChache {
+public interface IChache<K, V> {
 
-    static final String propertyPath="config.properties";
+    static final String propertyPath = "config.properties";
 
-    public void putToCache(Object key, Object object);
+    public void putToCache(K key, V objectValue);
 
-    public Object getFromCache(Object key);
+    public Object getFromCache(K key);
 
-    public void removeObject(Object key);
+    public void removeObject(K key);
 
     public void clearCache();
 

@@ -2,7 +2,7 @@ package cache.memory;
 
 import cache.AbstractCache;
 
-public class MemoryCache extends AbstractCache {
+public class MemoryCache<K, V> extends AbstractCache<K, V> {
 
     private static final String LEVEL = "firstLevelSize";
 
@@ -15,17 +15,17 @@ public class MemoryCache extends AbstractCache {
     }
 
     @Override
-    public void putToCache(Object key, Object object) {
+    public void putToCache(K key, V object) {
 
     }
 
     @Override
-    public Object getFromCache(Object key) {
+    public Object getFromCache(K key) {
         return null;
     }
 
     @Override
-    public void removeObject(Object key) {
+    public void removeObject(K key) {
 
     }
 
