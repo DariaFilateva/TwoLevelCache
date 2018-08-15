@@ -17,8 +17,8 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
     public static final String STRATEGY = "strategy";
 
     private static final Logger logger = Logger.getLogger(MemoryCache.class.getName());
-    private CacheAlogoritm cacheAlogoritm;
 
+    protected CacheAlogoritm cacheAlogoritm;
     protected HashMap<K, V> cache;
     protected int size;
 
@@ -26,25 +26,44 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
         this.cacheAlogoritm = findStrategy();
     }
 
-    public void putToCache(K key, V object) {
+  /*  public void putToCache(K key, V object) {
         if (cache.size() != size) {
             putToSpecificCache(key, object);
         } else {
             removeObject((K) cacheAlogoritm.getKeyToRemove());
             putToCache(key, object);
         }
-    }
+    }*/
+
+    public abstract void put(K key, V value);
 
     public V getFromCache(K key) {
         return cache.get(key);
     }
 
-    public void removeObject(K key) {
+    public V getFromCacheToRemove() {
+        return cache.get((K) cacheAlogoritm.getKeyToRemove());
+    }
+
+        public void removeObject(K key) {
         cache.remove(key);
+    }
+
+    public boolean hasCapacity(){
+        return cache.size() < size;
+    }
+
+
+    public void removeObjectAccordingStrategy(){
+        removeObject((K) cacheAlogoritm.getKeyToRemove());
     }
 
     public void clearCache() {
         cache.clear();
+    }
+
+    public int getSize() {
+        return cache.size();
     }
 
     protected Properties getProperties() throws IOException {
