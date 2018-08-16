@@ -4,6 +4,7 @@ import cache.AbstractCache;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MemoryCache<K, V> extends AbstractCache<K, V> {
 
@@ -20,12 +21,6 @@ public class MemoryCache<K, V> extends AbstractCache<K, V> {
         cache.put(key, value);
         cacheAlogoritm.setKeyData(key, new Date());
     }
-
-    @Override
-    protected void putToSpecificCache(K key, V object) {
-        cache.put(key, object);
-    }
-
 
 }
 

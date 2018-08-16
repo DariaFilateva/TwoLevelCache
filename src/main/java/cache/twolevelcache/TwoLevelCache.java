@@ -1,9 +1,12 @@
 package cache.twolevelcache;
 
+import cache.IChache;
 import cache.filesystem.FileSystemCache;
 import cache.memory.MemoryCache;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.Map;
 
 /*
 Двухуровневый кеш.
@@ -11,7 +14,7 @@ import java.io.Serializable;
         Если место в кеше оперативной памяти кончилось, достаем из кеша элемент (согласно заданному алгоритму) и записываем
         в файловый кеш
  */
-public class TwoLevelCache<K extends Serializable, V extends Serializable> {
+public class TwoLevelCache<K extends Serializable, V extends Serializable> implements IChache<K, V> {
 
     private MemoryCache<K, V> memoryCache = new MemoryCache<>();
     private FileSystemCache<K, V> fileSystemCache = new FileSystemCache<>();
@@ -20,16 +23,48 @@ public class TwoLevelCache<K extends Serializable, V extends Serializable> {
     public TwoLevelCache() throws Exception {
     }
 
-    public void putToCache(K key, V object) {
+    public MemoryCache<K, V> getMemoryCache() {
+        return memoryCache;
+    }
+
+    public FileSystemCache<K, V> getFileSystemCache() {
+        return fileSystemCache;
+    }
+
+    @Override
+    public void put(K key, V object) {
         if (memoryCache.hasCapacity()) {
             memoryCache.put(key, object);
         } else {
             V objectToRemoveFromMemory = memoryCache.getFromCacheToRemove();
-            fileSystemCache.put(key, objectToRemoveFromMemory);
+            fileSystemCache.put(memoryCache.getKeyAccordingStrategy(), objectToRemoveFromMemory);
             memoryCache.removeObjectAccordingStrategy();
             memoryCache.put(key, object);
         }
     }
 
+    public V getFromCache(K key) throws IOException, ClassNotFoundException {
+        if (memoryCache.getFromCache(key) == null) {
+            return fileSystemCache.getObject(key);
+        } else return memoryCache.getFromCache(key);
+    }
 
+    @Override
+    public void removeObject(K key) {
+
+    }
+
+    @Override
+    public void clearCache() {
+        memoryCache.clearCache();
+        fileSystemCache.clearCacheDirectiry();
+    }
+
+    public void removeFromCache(K key) {
+        if (memoryCache.getFromCache(key) != null) {
+            memoryCache.removeObject(key);
+        } else {
+            fileSystemCache.removeObject(key);
+        }
+    }
 }

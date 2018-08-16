@@ -26,15 +26,6 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
         this.cacheAlogoritm = findStrategy();
     }
 
-  /*  public void putToCache(K key, V object) {
-        if (cache.size() != size) {
-            putToSpecificCache(key, object);
-        } else {
-            removeObject((K) cacheAlogoritm.getKeyToRemove());
-            putToCache(key, object);
-        }
-    }*/
-
     public abstract void put(K key, V value);
 
     public V getFromCache(K key) {
@@ -45,17 +36,22 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
         return cache.get((K) cacheAlogoritm.getKeyToRemove());
     }
 
-        public void removeObject(K key) {
+    public void removeObject(K key) {
         cache.remove(key);
     }
 
-    public boolean hasCapacity(){
+    public boolean hasCapacity() {
         return cache.size() < size;
     }
 
+    public void removeObjectAccordingStrategy() {
+        K key = getKeyAccordingStrategy();
+        removeObject(key);
+        cacheAlogoritm.remove(key);
+    }
 
-    public void removeObjectAccordingStrategy(){
-        removeObject((K) cacheAlogoritm.getKeyToRemove());
+    public K getKeyAccordingStrategy() {
+        return (K) cacheAlogoritm.getKeyToRemove();
     }
 
     public void clearCache() {
@@ -81,8 +77,6 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
     protected String getSize(String level) throws IOException {
         return getProperties().getProperty(level);
     }
-
-    protected abstract void putToSpecificCache(K key, V object);
 
     private CacheAlogoritm findStrategy() throws Exception {
         logger.info("Find strategy...");
