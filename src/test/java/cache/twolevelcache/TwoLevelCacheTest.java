@@ -32,8 +32,8 @@ public class TwoLevelCacheTest {
 
     @Test
     public void testRemoveFromCache() throws Exception {
-        twoLevelCache.removeFromCache("key4");
-        twoLevelCache.removeFromCache("key3");
+        twoLevelCache.removeObject("key4");
+        twoLevelCache.removeObject("key3");
         Assert.assertEquals(twoLevelCache.getMemoryCache().getSize(), 1);
         Assert.assertEquals(twoLevelCache.getFileSystemCache().getSize(), 1);
     }

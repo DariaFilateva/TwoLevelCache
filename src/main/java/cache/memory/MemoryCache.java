@@ -4,7 +4,6 @@ import cache.AbstractCache;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class MemoryCache<K, V> extends AbstractCache<K, V> {
 

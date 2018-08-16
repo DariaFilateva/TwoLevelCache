@@ -3,7 +3,6 @@ package cache.filesystem;
 import cache.AbstractCache;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +11,8 @@ import java.util.UUID;
 public class FileSystemCache<K extends Serializable, V extends Serializable> extends AbstractCache<K, V> {
 
     private static final String LEVEL = "secondLevelSize";
-    private final String CACHE_DIR_PATH = "/Applications/testTask/src/main/resources/filesystemcache/";
-    private final Map<K, String> mapForPath;
-
+    private static final String CACHE_DIR_PATH = "/Applications/testTask/src/main/resources/filesystemcache/";
+    private Map<K, String> mapForPath;
 
     public FileSystemCache() throws Exception {
         super();
@@ -24,14 +22,10 @@ public class FileSystemCache<K extends Serializable, V extends Serializable> ext
         mapForPath = new HashMap<>(size);
     }
 
-    /*
-    Если в кэше есть место, вставляем туда,
-    если нет - согласно стратегии кеша вытесняем элемент,
-     записываем его в файл
-     */
     public void put(K key, V object) {
         if (hasCapacity()) {
             try {
+                logger.info("Filesystem cache has capacity. Adding object to cache...");
                 String fileName = "filesystemCache" + UUID.randomUUID() + ".txt";
                 File file = new File(CACHE_DIR_PATH, fileName);
                 mapForPath.put(key, fileName);
@@ -41,15 +35,14 @@ public class FileSystemCache<K extends Serializable, V extends Serializable> ext
                 e.printStackTrace();
             }
         } else {
+            logger.info("Filesystem cache hasnt capacity! Removing object from cache according strategy...");
             K keyToRemove = (K) cacheAlogoritm.getKeyToRemove();
             removeObject(keyToRemove);
             put(key, object);
-            // removeFromCache(objectToRemoveFromMemory);
-
         }
     }
 
-    public void removeObject(K keyToRemove){
+    public void removeObject(K keyToRemove) {
         String pathToRemove = mapForPath.get(keyToRemove);
         removeFileWithObject(CACHE_DIR_PATH + pathToRemove);
         mapForPath.remove(keyToRemove);
@@ -59,12 +52,16 @@ public class FileSystemCache<K extends Serializable, V extends Serializable> ext
     public void removeFileWithObject(String pathToRemove) {
         File file = new File(pathToRemove);
         if (file.delete()) {
-            System.out.println("файл был удален с корневой папки проекта");
-        } else System.out.println("Файл не был найден в корневой папке проекта");
+            logger.info("File was found.");
+        } else logger.info("File for delete was not found!");
     }
 
     public boolean hasCapacity() {
         return mapForPath.size() < size;
+    }
+
+    public int getSize() {
+        return mapForPath.size();
     }
 
     public V getObject(K key) throws IOException, ClassNotFoundException {
@@ -76,7 +73,6 @@ public class FileSystemCache<K extends Serializable, V extends Serializable> ext
                 V deserializedObject = (V) objectStream.readObject();
                 fileStream.close();
                 objectStream.close();
-
                 return deserializedObject;
             } catch (IOException ex) {
                 return null;
@@ -114,8 +110,5 @@ public class FileSystemCache<K extends Serializable, V extends Serializable> ext
         fileStream.close();
     }
 
-    public int getSize() {
-        return mapForPath.size();
-    }
 }
 

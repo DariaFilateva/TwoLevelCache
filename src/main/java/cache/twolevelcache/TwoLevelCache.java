@@ -13,7 +13,8 @@ import java.util.Map;
 *       Объекты записываются в Кеше оперативной памяти (размерность которой задается в проперти файле),
         Если место в кеше оперативной памяти кончилось, достаем из кеша элемент (согласно заданному алгоритму) и записываем
         в файловый кеш
- */
+*/
+
 public class TwoLevelCache<K extends Serializable, V extends Serializable> implements IChache<K, V> {
 
     private MemoryCache<K, V> memoryCache = new MemoryCache<>();
@@ -51,7 +52,11 @@ public class TwoLevelCache<K extends Serializable, V extends Serializable> imple
 
     @Override
     public void removeObject(K key) {
-
+        if (memoryCache.getFromCache(key) != null) {
+            memoryCache.removeObject(key);
+        } else {
+            fileSystemCache.removeObject(key);
+        }
     }
 
     @Override
@@ -59,12 +64,5 @@ public class TwoLevelCache<K extends Serializable, V extends Serializable> imple
         memoryCache.clearCache();
         fileSystemCache.clearCacheDirectiry();
     }
-
-    public void removeFromCache(K key) {
-        if (memoryCache.getFromCache(key) != null) {
-            memoryCache.removeObject(key);
-        } else {
-            fileSystemCache.removeObject(key);
-        }
-    }
 }
+

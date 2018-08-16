@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface IChache<K, V> {
 
-    static final String propertyPath = "config.properties";
+    final String propertyPath = "config.properties";
 
     public void put(K key, V objectValue);
 

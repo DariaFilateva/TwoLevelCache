@@ -16,7 +16,7 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
 
     public static final String STRATEGY = "strategy";
 
-    private static final Logger logger = Logger.getLogger(MemoryCache.class.getName());
+    protected static final Logger logger = Logger.getLogger(MemoryCache.class.getName());
 
     protected CacheAlogoritm cacheAlogoritm;
     protected HashMap<K, V> cache;
@@ -85,6 +85,7 @@ public abstract class AbstractCache<K, V> implements IChache<K, V> {
                 return new LRU();
             case "MFU":
                 return new MFU();
+                //TODO: при наличии времени реализовать данные стратегии
          /*   case "LFU":
                 return new CacheAlogoritm();
             case "FIFO":
